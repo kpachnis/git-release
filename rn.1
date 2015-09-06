@@ -1,0 +1,68 @@
+.TH RN 1 "May 11, 2015" "1.0.0"
+.SH NAME
+rn \- manage software release numbers
+.SH SYNOPSIS
+.B rn
+.RB [ \-s ]
+.RB [ \-l ]
+.RB [ \-n
+.IR <relno> ]
+.RB [ \-M ]
+.RB [ \-m ]
+.BR [ \-p ]
+.RB [ \-d
+.IR <relno> ]
+.RB [ \-D ]
+.RB [ \-h ]
+.RB [ \-v ]
+.SH DESCRIPTION
+.B rn
+is a shell script, which automates the creation of software relese numbers in the
+form of \fBMAJOR\fP.\fBMINOR\fP.\fBPATCH\fP using signed git tags.
+.sp
+Git operations performed by \fBrn\fP, will be pushed to all tracked
+repositories.
+.SH OPTIONS
+.TP
+.B \-s
+Show current release number.
+.TP
+.B \-l
+List all release numbers.
+.TP
+.BI \-n\  <relno>
+Create a new custom release number.
+.TP
+.B \-M
+Create a new major release number.
+.TP
+.B \-m
+Create a new minor release number.
+.TP
+.B \-p
+Create a new patch release number.
+.TP
+.B \-D
+Delete all release numbers.
+.TP
+.BI \-d\  <relno>
+Delete a release number.
+.TP
+.B \-h
+Print a help message and exit.
+.TP
+.B \-v
+Display
+.B rn
+version information.
+.SH ENVIRONMENT
+.TP
+.B RN_DEBUG
+If
+.RB $ RN_DEBUG
+is set, the shell \fBerrexit\fP, \fBnounset\fP and \fBxtrace\fP options will
+be set.
+.SH SEE ALSO
+.BR git-tag (1),
+.BR gpg2 (1),
+
