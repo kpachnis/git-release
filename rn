@@ -1,8 +1,8 @@
 #!/bin/sh
 
 if [ "$RN_DEBUG" ]; then
-  set -e
-  set -x
+	set -e
+	set -x
 fi
 
 PATH="$(getconf PATH)"
@@ -11,221 +11,221 @@ readonly EPERM=1
 readonly ENOENT=2
 
 checks() {
-  if [ ! -x "$(command -v git)" ]; then
-    printf "ERROR: git not found"
-    exit $ENOENT
-  fi
+	if [ ! -x "$(command -v git)" ]; then
+		printf "ERROR: git not found"
+		exit $ENOENT
+	fi
 
-  if [ ! -d "$PWD/.git" ]; then
-    printf "ERROR: Not a git repository\n"
-    exit $EPERM
-  fi
+	if [ ! -d "$PWD/.git" ]; then
+		printf "ERROR: Not a git repository\n"
+		exit $EPERM
+	fi
 
-  return 0
+	return 0
 }
 
 version() {
-  local version='1.0.0'
+	local version='1.0.0'
 
-  printf "rn $version, (C) 2015 Konstantinos Pachnis, see LICENSE for details\n"
+	printf "rn $version, (C) 2015 Konstantinos Pachnis, see LICENSE for details\n"
 
-  exit 0
+	exit 0
 }
 
 usage() {
-  printf "Usage: rn [-s] [-l] [-n version] [-M] [-m] [-p] [-D] [-d version] [-v]\n"
+	printf "Usage: rn [-s] [-l] [-n version] [-M] [-m] [-p] [-D] [-d version] [-v]\n"
 
-  exit 0
+	exit 0
 }
 
 create_release_number() {
-  checks
+	checks
 
-  if echo "$version_no" | grep [0-9].[0-9].[0-9] >/dev/null; then
-    remotes="$(git remote)"
+	if echo "$version_no" | grep [0-9].[0-9].[0-9] >/dev/null; then
+		remotes="$(git remote)"
 
-    git tag -s "$version_no" -m "Create version $version_no"
+		git tag -s "$version_no" -m "Create version $version_no"
 
-    if [ $? -eq 0 ]; then
-      for r in $remotes; do
-        git push "$r" "$version_no"
-      done
-    else
-      exit $?
-    fi
-  else
-    usage
-  fi
+		if [ $? -eq 0 ]; then
+			for r in $remotes; do
+				git push "$r" "$version_no"
+			done
+		else
+			exit $?
+		fi
+	else
+		usage
+	fi
 
-  exit 0
+	exit 0
 }
 
 current_release_number() {
-  checks
+	checks
 
-  local version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
+	local version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
 
-  if [ "$version" ]; then
-    printf "$version\n"
-  else
-    printf "No versions found\n"
-    exit $EPERM
-  fi
+	if [ "$version" ]; then
+		printf "$version\n"
+	else
+		printf "No versions found\n"
+		exit $EPERM
+	fi
 
-  exit 0
+	exit 0
 }
 
 list_release_numbers() {
-  checks
+	checks
 
-  local versions="$(git tag -l | sort -n -t. -k1,1 -k2,2 -k3,3)"
+	local versions="$(git tag -l | sort -n -t. -k1,1 -k2,2 -k3,3)"
 
-  if [ "$versions" ]; then
-    for v in $versions; do
-      printf "$v\n"
-    done
-  else
-    printf "No versions found\n"
-    exit $EPERM
-  fi
+	if [ "$versions" ]; then
+		for v in $versions; do
+			printf "$v\n"
+		done
+	else
+		printf "No versions found\n"
+		exit $EPERM
+	fi
 
-  exit 0
+	exit 0
 }
 
 auto_release_number() {
-  checks
+	checks
 
-  version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
+	version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
 
-  if echo "$version" | grep [0-9].[0-9].[0-9] >/dev/null; then
-    case $version_type in
-      'major')
-        version_no="$(echo $version | awk -F . '{ print $1+1 "." 0 "." 0 }')"
-        ;;
-      'minor')
-        version_no="$(echo $version | awk -F . '{ print $1 "." $2+1 "." 0 }')"
-        ;;
-      'patch')
-        version_no="$(echo $version | awk -F . '{ print $1 "." $2 "." $3+1 }')"
-        ;;
-      *)
-        ;;
-    esac
-    create_release_number
-  else
-    printf "No versions found\n"
-    exit $EPERM
-  fi
+	if echo "$version" | grep [0-9].[0-9].[0-9] >/dev/null; then
+		case $version_type in
+			'major')
+				version_no="$(echo $version | awk -F . '{ print $1+1 "." 0 "." 0 }')"
+				;;
+			'minor')
+				version_no="$(echo $version | awk -F . '{ print $1 "." $2+1 "." 0 }')"
+				;;
+			'patch')
+				version_no="$(echo $version | awk -F . '{ print $1 "." $2 "." $3+1 }')"
+				;;
+			*)
+				;;
+		esac
+		create_release_number
+	else
+		printf "No versions found\n"
+		exit $EPERM
+	fi
 
-  exit 0
+	exit 0
 }
 
 delete_all_release_numbers() {
-  local confirm_delete='N'
+	local confirm_delete='N'
 
-  checks
+	checks
 
-  versions="$(git tag -l | sort -n -t. -k1,1 -k2,2 -k3,3)"
+	versions="$(git tag -l | sort -n -t. -k1,1 -k2,2 -k3,3)"
 
-  if [ ! "$versions" ]; then
-    printf "No versions found\n"
-    exit $EPERM
-  fi
+	if [ ! "$versions" ]; then
+		printf "No versions found\n"
+		exit $EPERM
+	fi
 
-  printf "WARNING: All versions will be deleted permanently.\n"
-  printf "Do you want to continue [N/y]? "
+	printf "WARNING: All versions will be deleted permanently.\n"
+	printf "Do you want to continue [N/y]? "
 
-  read confirm_delete
+	read confirm_delete
 
-  if [ "$confirm_delete" ] && [ "$confirm_delete" = 'Y' -o "$confirm_delete" = 'y' ]; then
-    remotes="$(git remote)"
+	if [ "$confirm_delete" ] && [ "$confirm_delete" = 'Y' -o "$confirm_delete" = 'y' ]; then
+		remotes="$(git remote)"
 
-    for v in $versions; do
-      git tag -d "$v"
+		for v in $versions; do
+			git tag -d "$v"
 
-      for r in $remotes; do
-        git push "$r" ":refs/tags/$v"
-      done
-    done
-  fi
+			for r in $remotes; do
+				git push "$r" ":refs/tags/$v"
+			done
+		done
+	fi
 
-  exit 0
+	exit 0
 }
 
 delete_release_number() {
-  local confirm_delete='N'
+	local confirm_delete='N'
 
-  checks
+	checks
 
-  if ! echo "$version_no" | grep [0-9].[0-9].[0-9] >/dev/null; then
-    printf "Release $version_no not found\n"
-    exit $EPERM
-  fi
+	if ! echo "$version_no" | grep [0-9].[0-9].[0-9] >/dev/null; then
+		printf "Release $version_no not found\n"
+		exit $EPERM
+	fi
 
-  printf "WARNING: Release $version_no will be deleted permanently.\n"
-  printf "Do you want to continue [N/y]? "
+	printf "WARNING: Release $version_no will be deleted permanently.\n"
+	printf "Do you want to continue [N/y]? "
 
-  read confirm_delete
+	read confirm_delete
 
-  if [ "$confirm_delete" ] && [ "$confirm_delete" = 'Y' -o "$confirm_delete" = 'y' ]; then
-    remotes="$(git remote)"
+	if [ "$confirm_delete" ] && [ "$confirm_delete" = 'Y' -o "$confirm_delete" = 'y' ]; then
+		remotes="$(git remote)"
 
-    git tag -d "$version_no"
+		git tag -d "$version_no"
 
-    if [ $? -eq 0 ]; then
-      for r in $remotes; do
-        git push "$r" ":refs/tags/$version_no"
-      done
-    fi
-  fi
+		if [ $? -eq 0 ]; then
+			for r in $remotes; do
+				git push "$r" ":refs/tags/$version_no"
+			done
+		fi
+	fi
 
-  exit 0
+	exit 0
 }
 
 main() {
-  while getopts d:n:DMhlmpsv opt; do
-    case $opt in
-      M)
-        version_type='major'
-        auto_release_number
-        ;;
-      m)
-        version_type='minor'
-        auto_release_number
-        ;;
-      p)
-        version_type='patch'
-        auto_release_number
-        ;;
-      s)
-        current_release_number
-        ;;
-      l)
-        list_release_numbers
-        ;;
-      n)
-        version_no="$OPTARG"
-        create_release_number
-        ;;
-      D)
-        delete_all_release_numbers
-        ;;
-      d)
-        version_no="$OPTARG"
-        delete_release_number
-        ;;
-      v)
-        version
-        ;;
-      h)
-        usage
-        ;;
-    esac
-  done
+	while getopts d:n:DMhlmpsv opt; do
+		case $opt in
+			M)
+				version_type='major'
+				auto_release_number
+				;;
+			m)
+				version_type='minor'
+				auto_release_number
+				;;
+			p)
+				version_type='patch'
+				auto_release_number
+				;;
+			s)
+				current_release_number
+				;;
+			l)
+				list_release_numbers
+				;;
+			n)
+				version_no="$OPTARG"
+				create_release_number
+				;;
+			D)
+				delete_all_release_numbers
+				;;
+			d)
+				version_no="$OPTARG"
+				delete_release_number
+				;;
+			v)
+				version
+				;;
+			h)
+				usage
+				;;
+		esac
+	done
 
-  shift $(( OPTIND - 1 ))
+	shift $(( OPTIND - 1 ))
 
-  [ $# = 0 ] && usage
+	[ $# = 0 ] && usage
 }
 
 main "$@"
