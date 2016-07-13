@@ -25,15 +25,15 @@ checks() {
 }
 
 version() {
-	local version='1.0.0'
+	local version='1.0.2'
 
-	printf "rn $version, (C) 2015 Konstantinos Pachnis, see LICENSE for details\n"
+	printf "git-release $version, (C) 2015-Present Konstantinos Pachnis, see LICENSE for details\n"
 
 	exit 0
 }
 
 usage() {
-	printf "Usage: rn [-s] [-l] [-n version] [-M] [-m] [-p] [-D] [-d version] [-v]\n"
+	printf "Usage: git release [-s] [-l] [-n version] [-M] [-m] [-p] [-D] [-d version] [-v]\n"
 
 	exit 0
 }
