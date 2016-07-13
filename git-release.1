@@ -1,8 +1,8 @@
-.TH RN 1 "May 11, 2015" "1.0.0"
+.TH GIT-RELEASE 1 "July 13, 2016" "1.0.2"
 .SH NAME
-rn \- manage software release numbers
+git-release \- manage software release numbers
 .SH SYNOPSIS
-.B rn
+.B git release
 .RB [ \-s ]
 .RB [ \-l ]
 .RB [ \-n
@@ -16,11 +16,11 @@ rn \- manage software release numbers
 .RB [ \-h ]
 .RB [ \-v ]
 .SH DESCRIPTION
-.B rn
+.B git release
 is a shell script, which automates the creation of software relese numbers in the
 form of \fBMAJOR\fP.\fBMINOR\fP.\fBPATCH\fP using signed git tags.
 .sp
-Git operations performed by \fBrn\fP, will be pushed to all tracked
+Git operations performed by \fBrelease\fP, will be pushed to all tracked
 repositories.
 .SH OPTIONS
 .TP
@@ -53,7 +53,7 @@ Print a help message and exit.
 .TP
 .B \-v
 Display
-.B rn
+.B git-release
 version information.
 .SH ENVIRONMENT
 .TP
