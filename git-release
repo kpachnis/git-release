@@ -63,7 +63,7 @@ create_release_number() {
 current_release_number() {
 	checks
 
-	local version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
+	local version="$(git tag -l --sort=version:refname | tail -n 1)"
 
 	if [ "$version" ]; then
 		printf "$version\n"
@@ -78,7 +78,7 @@ current_release_number() {
 list_release_numbers() {
 	checks
 
-	local versions="$(git tag -l | sort -n -t. -k1,1 -k2,2 -k3,3)"
+	local versions="$(git tag -l --sort=version:refname)"
 
 	if [ "$versions" ]; then
 		for v in $versions; do
@@ -95,7 +95,7 @@ list_release_numbers() {
 auto_release_number() {
 	checks
 
-	local version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
+	local version="$(git tag -l --sort=version:refname | tail -n 1)"
 
 	if echo "$version" | egrep "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$" >/dev/null; then
 		case $version_type in
@@ -125,7 +125,7 @@ delete_all_release_numbers() {
 
 	checks
 
-	versions="$(git tag -l | sort -n -t. -k1,1 -k2,2 -k3,3)"
+	local versions="$(git tag -l --sort=version:refname)"
 
 	if [ ! "$versions" ]; then
 		printf "No versions found\n"
