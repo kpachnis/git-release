@@ -95,7 +95,7 @@ list_release_numbers() {
 auto_release_number() {
 	checks
 
-	version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
+	local version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
 
 	if echo "$version" | grep [0-9].[0-9].[0-9] >/dev/null; then
 		case $version_type in
