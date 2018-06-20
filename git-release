@@ -41,7 +41,7 @@ usage() {
 create_release_number() {
 	checks
 
-	if echo "$version_no" | grep [0-9].[0-9].[0-9] >/dev/null; then
+	if echo "$version_no" | egrep "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$" >/dev/null; then
 		remotes="$(git remote)"
 
 		git tag -s "$version_no" -m "Create version $version_no"
@@ -97,7 +97,7 @@ auto_release_number() {
 
 	local version="$(git tag -l | sort -n -r -t. -k1,1 -k2,2 -k3,3 | head -n 1)"
 
-	if echo "$version" | grep [0-9].[0-9].[0-9] >/dev/null; then
+	if echo "$version" | egrep "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$" >/dev/null; then
 		case $version_type in
 			'major')
 				version_no="$(echo $version | awk -F . '{ print $1+1 "." 0 "." 0 }')"
@@ -157,7 +157,7 @@ delete_release_number() {
 
 	checks
 
-	if ! echo "$version_no" | grep [0-9].[0-9].[0-9] >/dev/null; then
+	if ! echo "$version_no" | egrep "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$" >/dev/null; then
 		printf "Release $version_no not found\n"
 		exit $EPERM
 	fi
