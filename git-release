@@ -5,8 +5,6 @@ if [ "$RN_DEBUG" ]; then
 	set -x
 fi
 
-PATH="$(getconf PATH)"
-
 readonly EPERM=1
 readonly ENOENT=2
 
