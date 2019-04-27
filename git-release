@@ -23,7 +23,7 @@ checks() {
 }
 
 version() {
-	local version='1.0.4'
+	local version='1.0.6'
 
 	printf "git-release $version, (C) 2015-Present Konstantinos Pachnis, see LICENSE for details\n"
 
